@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="se.ttms.dao.mybatis.TicketMybatisDao">
+
+    <!--增加票-->
+    <insert id="addTicket" parameterType="Ticket" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO ticket ( seat_id , sched_id, ticket_price , ticket_status)
+        VALUES (#{seatId}, #{scheduleId}, #{price}, #{status})
+    </insert>
+
+    <!--删除票-->
+    <delete id="delTicket" parameterType="_int">
+        DELETE FROM ticket WHERE ticket_id = #{0}
+    </delete>
+
+    <!--删除某个演出计划的所有票-->
+    <delete id="delTicketBySchedule" parameterType="_int">
+        DELETE FROM ticket WHERE sched_id = #{0}
+    </delete>
+
+
+    <!--修改票的信息-->
+    <update id="updateTicketStatus" parameterType="Ticket">
+        UPDATE ticket SET ticket_status = #{status}, seat_id = #{seatId}, sched_id = #{scheduleId}, ticket_price = #{price},
+         ticket_status = #{status}, ticket_locked_time = #{locked_time} WHERE ticket_id = #{id}
+    </update>
+
+    <!--修改票价-->
+    <update id="updateTicketPrice">
+        UPDATE ticket SET ticket_price = #{price} WHERE sched_id = #{scheduleId}
+    </update>
+
+    <!--票对象的查询结果map-->
+    <resultMap id="getTicket" type="Ticket">
+        <id column="ticket_id" property="id"/>
+        <result column="seat_id" property="seatId"/>
+        <result column="sched_id" property="scheduleId"/>
+        <result column="ticket_price" property="price"/>
+        <result column="ticket_status" property="status"/>
+        <result column="ticket_locked_time" property="locked_time"/>
+    </resultMap>
+
+    <!--获得数据-->
+    <select id="getTicket" resultMap="getTicket" parameterType="string">
+        SELECT ticket_id, seat_id , sched_id, ticket_price , ticket_status, ticket_locked_time FROM ticket
+        <if test="_parameter != null and _parameter != ''">
+            WHERE ${_parameter}
+        </if>
+    </select>
+
+</mapper>

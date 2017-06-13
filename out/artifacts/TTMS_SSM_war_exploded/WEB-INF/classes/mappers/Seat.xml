@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="se.ttms.dao.mybatis.SeatMybatisDao">
+
+    <!--增加座位-->
+    <insert id="addSeat" parameterType="Seat" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO seat ( studio_id ,seat_row , seat_column,seat_status) VALUES (#{studioId}, #{row}, #{column}, #{seatStatus})
+    </insert>
+
+    <!--删除座位-->
+    <delete id="delSeat" parameterType="_int">
+        DELETE FROM seat WHERE seat_id = #{0}
+    </delete>
+
+    <!--删除所有-->
+    <delete id="delAllSeat" parameterType="_int">
+        DELETE FROM seat WHERE studio_id = #{0}
+    </delete>
+
+    <!--修改座位-->
+    <update id="updateSeat" parameterType="Seat">
+        UPDATE seat SET studio_id = #{studioId}, seat_row = #{row}, seat_column = #{column}, seat_status = #{seatStatus}
+        WHERE seat_id = #{id}
+    </update>
+
+    <!--座位对象的查询结果map-->
+    <resultMap id="getSeat" type="Seat">
+        <id column="seat_id" property="id"/>
+        <result column="studio_id" property="studioId"/>
+        <result column="seat_row" property="row"/>
+        <result column="seat_column" property="column"/>
+        <result column="seat_status" property="seatStatus"/>
+    </resultMap>
+
+    <!--获得数据-->
+    <select id="getSeat" resultMap="getSeat" parameterType="string">
+        SELECT seat_id, studio_id ,seat_row , seat_column,seat_status FROM seat
+        <if test="_parameter != null and _parameter != ''">
+            WHERE ${_parameter}
+        </if>
+    </select>
+
+</mapper>

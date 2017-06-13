@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="se.ttms.dao.mybatis.ScheduleMybatisDao">
+
+    <!--增加演出计划-->
+    <insert id="addSchedule" parameterType="Schedule" keyProperty="sched_id" useGeneratedKeys="true">
+        INSERT INTO schedule(studio_id, play_id, sched_time, sched_ticket_price) VALUES (#{studio_id}, #{play_id}, #{sched_time}, #{sched_ticket_price})
+    </insert>
+
+    <!--删除演出计划-->
+    <delete id="delSchedule" parameterType="_int">
+        DELETE FROM schedule WHERE sched_id = #{0}
+    </delete>
+
+    <!--修改演出计划-->
+    <update id="updateSchedule" parameterType="Schedule">
+        UPDATE schedule SET studio_id = #{studio_id}, play_id = #{play_id}, sched_time = #{sched_time}, sched_ticket_price = #{sched_ticket_price}
+        WHERE sched_id = #{sched_id}
+    </update>
+
+    <!--演出计划对象的查询结果map-->
+    <resultMap id="scheduleMap" type="Schedule">
+        <id column="sched_id" property="sched_id"/>
+        <result column="studio_id" property="studio_id"/>
+        <result column="play_id" property="play_id"/>
+        <result column="sched_time" property="sched_time"/>
+        <result column="sched_ticket_price" property="sched_ticket_price"/>
+    </resultMap>
+
+    <!--获得数据-->
+    <select id="getSchedule" resultMap="scheduleMap"  parameterType="string">
+        SELECT sched_id, studio_id, play_id, sched_time, sched_ticket_price FROM Schedule
+        <if test="_parameter != null and _parameter != ''">
+            WHERE ${_parameter}
+        </if>
+    </select>
+
+    <select id="getAllSchedule" resultMap="scheduleMap">
+        SELECT * FROM schedule
+    </select>
+</mapper>

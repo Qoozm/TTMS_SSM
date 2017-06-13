@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="se.ttms.dao.mybatis.StudioMybatisDao">
+
+    <!--增加演出厅-->
+    <insert id="addStudio" parameterType="Studio" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO studio(studio_name, studio_row_count, studio_col_count, studio_introduction,studio_flag )
+         VALUES (#{name}, #{rowCount}, #{colCount}, #{introduction}, #{studioFlag})
+    </insert>
+
+    <!--删除演出厅-->
+    <delete id="delStudio" parameterType="_int">
+        DELETE FROM studio WHERE studio_id = #{0}
+    </delete>
+
+    <!--修改演出厅-->
+    <update id="updateStudio" parameterType="Studio">
+        UPDATE studio SET studio_name = #{name}, studio_row_count = #{rowCount}, studio_col_count = #{colCount}, studio_introduction = #{introduction},
+        studio_flag = #{studioFlag} WHERE studio_id = #{id}
+    </update>
+
+    <!--演出厅对象的查询结果map-->
+    <resultMap id="getStudio" type="Studio">
+        <id column="studio_id" property="id"/>
+        <result column="studio_name" property="name"/>
+        <result column="studio_row_count" property="rowCount"/>
+        <result column="studio_col_count" property="colCount"/>
+        <result column="seat_status" property="studioFlag"/>
+        <result column="studio_introduction" property="introduction"/>
+    </resultMap>
+
+    <!--获得数据-->
+    <select id="getStudio" resultMap="getStudio" parameterType="string">
+        SELECT studio_id, studio_name, studio_row_count, studio_col_count, studio_introduction,studio_flag  FROM studio
+        <if test="_parameter != null and _parameter != ''">
+            WHERE ${_parameter}
+        </if>
+    </select>
+
+</mapper>

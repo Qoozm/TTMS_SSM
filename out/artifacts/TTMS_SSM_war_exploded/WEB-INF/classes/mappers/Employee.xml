@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="se.ttms.dao.mybatis.EmployeeMybatisDao">
+
+    <!--增加员工-->
+    <insert id="addEmployee" parameterType="Employee" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO employee(emp_no, emp_name, emp_tel_num, emp_addr, emp_email, emp_passwd, emp_access)
+        VALUES(#{no}, #{name}, #{tel}, #{addr}, #{email}, #{password}, #{access})
+    </insert>
+
+    <!--删除员工-->
+    <delete id="delEmployee" parameterType="_int">
+        DELETE FROM employee WHERE emp_id = #{0}
+    </delete>
+
+    <!--修改员工信息-->
+    <update id="updateEmployeeInfo" parameterType="Employee">
+        UPDATE employee SET emp_email = #{email}, emp_access = #{access}, emp_addr = #{addr}, emp_name = #{name}, emp_no = #{no},
+        emp_tel_num = #{tel}, emp_passwd = #{password} WHERE emp_id = #{id}
+    </update>
+
+    <!--修改密码-->
+    <update id="updateEmployeePass" parameterType="Employee">
+        UPDATE employee SET emp_passwd = #{password} WHERE emp_id = #{id}
+    </update>
+
+    <!--获得一个员工对象的查询结果map-->
+    <resultMap id="employeeMap" type="Employee">
+        <id column="emp_id" property="id"/>
+        <result column="emp_no" property="no"/>
+        <result column="emp_name" property="name"/>
+        <result column="emp_tel_num" property="tel"/>
+        <result column="emp_addr" property="addr"/>
+        <result column="emp_email" property="email"/>
+        <result column="emp_passwd" property="password"/>
+        <result column="emp_access" property="access"/>
+    </resultMap>
+
+    <!--获得数据-->
+    <select id="getEmployee" resultMap="employeeMap" parameterType="string">
+        SELECT emp_id, emp_passwd, emp_tel_num, emp_no, emp_name, emp_addr, emp_access, emp_email FROM employee
+        <if test="_parameter != null and _parameter != ''">
+            WHERE ${_parameter}
+        </if>
+    </select>
+</mapper>

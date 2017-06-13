@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="se.ttms.dao.mybatis.DataDictMybatisDao">
+
+    <!--增加数据字典-->
+    <insert id="addDataDict" parameterType="DataDict" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO data_dict(dict_parent_id, dict_index, dict_name, dict_value)
+        VALUES(#{superId}, #{index}, #{name}, #{value})
+    </insert>
+
+    <!--删除数据字典-->
+    <delete id="delDataDict" parameterType="_int">
+        DELETE FROM data_dict WHERE dict_id = #{0}
+    </delete>
+
+    <!--修改数据字典-->
+    <update id="updateDataDict" parameterType="DataDict">
+        UPDATE data_dict SET dict_parent_id = #{superId},
+        dict_index = #{index}, dict_name = #{name}, dict_value = #{value} WHERE dict_id = #{id}
+    </update>
+
+    <!--数据字典对象的查询结果map-->
+    <resultMap id="dataDictMap" type="DataDict">
+       <id column="dict_id" property="id"/>
+        <result column="dict_parent_id" property="superId"/>
+        <result column="dict_index" property="index"/>
+        <result column="dict_name" property="name"/>
+        <result column="dict_value" property="value"/>
+    </resultMap>
+
+    <!--获得数据-->
+    <select id="getDataDict" resultMap="dataDictMap" parameterType="string">
+        SELECT dict_id, dict_parent_id, dict_index, dict_name, dict_value FROM data_dict
+        <if test="_parameter != null and _parameter != ''">
+            WHERE ${_parameter};
+        </if>
+    </select>
+</mapper>

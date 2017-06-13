@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tool http://www.springframework.org/schema/tool/spring-tool.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+
+    <!--扫描-->
+    <context:component-scan base-package="se.ttms.dao.mybatis"></context:component-scan>
+    <context:component-scan base-package="se.ttms.service.mybatis"></context:component-scan>
+    <context:component-scan base-package="se.ttms.common"></context:component-scan>
+
+
+    <!--数据源-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+          p:driverClass="com.mysql.jdbc.Driver"
+          p:jdbcUrl="jdbc:mysql://localhost/ttms_2017?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=true"
+          p:user="charley"
+          p:password="amd"></bean>
+
+    <!--SQL-BEAN-工厂-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+          p:dataSource-ref="dataSource"
+          p:configLocation="classpath:mybatis-config.xml"
+          p:mapperLocations="classpath:mappers/*.xml"></bean>
+
+    <!--接口映射扫描-->
+    <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer"
+          p:sqlSessionFactory-ref="sqlSessionFactory"
+          p:basePackage="se.ttms.dao.mybatis"></bean>
+
+
+</beans>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="se.ttms.dao.mybatis.SaleMybatisDao">
+
+    <!--执行售票-->
+    <insert id="doSale" keyProperty="id" useGeneratedKeys="true">
+        insert into sale(emp_id, sale_time, sale_payment, sale_change, sale_type, sale_status) VALUES
+        (#{employeeId}, #{nowTime}, #{price}, 0, 1, 1)
+    </insert>
+
+    <!--插入saleItem-->
+    <insert id="addItem" >
+        INSERT INTO sale_item(ticket_id, sale_ID, sale_item_price) VALUES(#{ticketId}, #{saleId}, #{price})
+    </insert>
+
+    <!--更新状态为卖出-->
+    <update id="updateTicketStatusForSaled" parameterType="_int">
+        UPDATE ticket SET ticket_status = 9 WHERE ticket_id = #{0}
+    </update>
+
+    <!--删除卖票记录-->
+    <delete id="delSale" parameterType="_int">
+        DELETE FROM sale WHERE sale_ID = #{0}
+    </delete>
+
+    <!--卖票对象的查询结果map-->
+    <resultMap id="saleMap" type="Sale">
+        <id column="sale_ID" property="id"/>
+        <result column="emp_id" property="empId"/>
+        <result column="sale_time" property="time"/>
+        <result column="sale_payment" property="payment"/>
+        <result column="sale_change" property="change"/>
+        <result column="sale_type" property="type"/>
+        <result column="sale_status" property="status"/>
+    </resultMap>
+
+    <!--SaleItem对象的查询结果映射-->
+    <resultMap id="saleItemMap" type="SaleItem">
+        <id column="sale_item_id" property="id"/>
+        <result column="ticket_id" property="ticketId"/>
+        <result column="sale_ID" property="saleId"/>
+        <result column="sale_item_price" property="price"/>
+    </resultMap>
+
+    <!--获得Sale数据-->
+    <select id="getSale" resultMap="saleMap" parameterType="string">
+        SELECT sale_ID, emp_id, sale_time, sale_payment, sale_change, sale_type, sale_status FROM sale
+        <if test="_parameter != null and _parameter != ''">
+            WHERE ${_parameter}
+        </if>
+    </select>
+
+
+    <!--获得SaleItem数据-->
+    <select id="getSaleItem" resultMap="saleItemMap" parameterType="string">
+        SELECT sale_item_id, ticket_id, sale_ID, sale_item_price FROM sale_item
+        <if test="_parameter != null and _parameter != ''">
+            WHERE ${_parameter}
+        </if>
+    </select>
+
+
+</mapper>
