@@ -19,5 +19,4 @@ public interface DataDictMybatisDao {
 
     List<DataDict> getDataDict(String condi);
 
-
 }
